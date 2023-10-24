@@ -1,0 +1,22 @@
+[user]
+    name = Harald Hoyer
+    email = harald@matterlabs.dev
+    signingkey = 7F3D64824AC0B6B8009E50504BC0896FB5693595
+[commit]
+    gpgsign = true
+
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+[remote "origin"]
+	url = git@github.com:matter-labs/vault-auth-tee.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+	dmb-enabled = true
+[branch "main"]
+	remote = origin
+	merge = refs/heads/main
+	dmb-required = true
+[delete-merged-branches]
+	configured = 5.0.0+
