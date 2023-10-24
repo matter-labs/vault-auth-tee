@@ -1,4 +1,4 @@
-FROM docker.io/ubuntu:20.04 AS pluginbuilder
+FROM docker.io/ubuntu:20.10 AS pluginbuilder
 
 ARG VERSION=1.20.4
 ARG CGO_ENABLED=1
