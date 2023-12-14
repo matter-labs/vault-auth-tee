@@ -2,7 +2,7 @@
 // Copyright (c) HashiCorp, Inc.
 // Copyright (c) Matter Labs
 
-package tee
+package vault_auth_tee
 
 import (
 	"context"

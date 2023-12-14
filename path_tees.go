@@ -2,7 +2,7 @@
 // Copyright (c) HashiCorp, Inc.
 // Copyright (c) Matter Labs
 
-package tee
+package vault_auth_tee
 
 import "C"
 import (
@@ -15,8 +15,6 @@ import (
 	"github.com/hashicorp/vault/sdk/framework"
 	"github.com/hashicorp/vault/sdk/helper/tokenutil"
 	"github.com/hashicorp/vault/sdk/logical"
-
-	"github.com/matter-labs/vault-auth-tee/ratee"
 )
 
 func pathListTees(b *backend) *framework.Path {
@@ -280,22 +278,22 @@ func handleSGXConfig(d *framework.FieldData, tee *TeeEntry) (*logical.Response, 
 	}
 
 	if sgxAllowedTcbLevelsRaw, ok := d.GetOk("sgx_allowed_tcb_levels"); ok {
-		tee.SgxAllowedTcbLevels = make(map[ratee.SgxQlQvResult]bool)
+		tee.SgxAllowedTcbLevels = make(map[SgxQlQvResult]bool)
 		for _, v := range sgxAllowedTcbLevelsRaw.([]string) {
-			var state ratee.SgxQlQvResult
+			var state SgxQlQvResult
 			switch v {
 			case "Ok":
-				state = ratee.SgxQlQvResultOk
+				state = SgxQlQvResultOk
 			case "ConfigNeeded":
-				state = ratee.SgxQlQvResultConfigNeeded
+				state = SgxQlQvResultConfigNeeded
 			case "OutOfDate":
-				state = ratee.SgxQlQvResultOutOfDate
+				state = SgxQlQvResultOutOfDate
 			case "OutOfDateConfigNeeded":
-				state = ratee.SgxQlQvResultOutOfDateConfigNeeded
+				state = SgxQlQvResultOutOfDateConfigNeeded
 			case "SwHardeningNeeded":
-				state = ratee.SgxQlQvResultSwHardeningNeeded
+				state = SgxQlQvResultSwHardeningNeeded
 			case "ConfigAndSwHardeningNeeded":
-				state = ratee.SgxQlQvResultConfigAndSwHardeningNeeded
+				state = SgxQlQvResultConfigAndSwHardeningNeeded
 			default:
 				return logical.ErrorResponse("invalid sgx_allowed_tcb_levels value"), logical.ErrInvalidRequest
 			}
@@ -315,7 +313,7 @@ type TeeEntry struct {
 	SgxMrenclave        string
 	SgxIsvProdid        int
 	SgxMinIsvSvn        int
-	SgxAllowedTcbLevels map[ratee.SgxQlQvResult]bool
+	SgxAllowedTcbLevels map[SgxQlQvResult]bool
 }
 
 const pathTeeHelpSyn = `

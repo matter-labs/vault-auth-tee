@@ -2,7 +2,7 @@
 // Copyright (c) HashiCorp, Inc.
 // Copyright (c) Matter Labs
 
-package tee
+package vault_auth_tee
 
 import (
 	"bytes"
@@ -21,8 +21,6 @@ import (
 	"github.com/hashicorp/vault/sdk/helper/cidrutil"
 	"github.com/hashicorp/vault/sdk/helper/policyutil"
 	"github.com/hashicorp/vault/sdk/logical"
-
-	"github.com/matter-labs/vault-auth-tee/ratee"
 )
 
 var timeNowFunc = time.Now
@@ -81,7 +79,7 @@ func (b *backend) pathLoginResolveRole(ctx context.Context, req *logical.Request
 		return logical.ErrorResponse("quote decode error"), nil
 	}
 
-	var quote = ratee.Quote{}
+	var quote = Quote{}
 	var byteReader = bytes.NewReader(quoteBytes)
 	err = binary.Read(byteReader, binary.BigEndian, &quote)
 	if err != nil {
@@ -228,7 +226,7 @@ func (b *backend) pathLogin(ctx context.Context, req *logical.Request, data *fra
 	}
 
 	// Do a quick check of the quote before doing the expensive verification
-	var quoteStart = ratee.Quote{}
+	var quoteStart = Quote{}
 	var byteReader = bytes.NewReader(quoteBytes)
 	err = binary.Read(byteReader, binary.BigEndian, &quoteStart)
 	if err != nil {
@@ -258,14 +256,14 @@ func (b *backend) pathLogin(ctx context.Context, req *logical.Request, data *fra
 
 	// Decode the collateral
 	jsonCollateralBlob := data.Get("collateral").(string)
-	var collateral ratee.TeeQvCollateral
+	var collateral TeeQvCollateral
 	err = json.Unmarshal([]byte(jsonCollateralBlob), &collateral)
 	if err != nil {
 		return logical.ErrorResponse("collateral unmarshal error"), nil
 	}
 
 	// Do the actual remote attestation verification
-	result, err := ratee.SgxVerifyRemoteReportCollateral(quoteBytes, collateral, timeNowFunc().Unix())
+	result, err := SgxVerifyRemoteReportCollateral(quoteBytes, collateral, timeNowFunc().Unix())
 	if err != nil {
 		return logical.ErrorResponse("sgx verify error"), nil
 	}
@@ -274,7 +272,7 @@ func (b *backend) pathLogin(ctx context.Context, req *logical.Request, data *fra
 		return logical.ErrorResponse("collateral expired"), nil
 	}
 
-	if result.VerificationResult != ratee.SgxQlQvResultOk {
+	if result.VerificationResult != SgxQlQvResultOk {
 		if entry.SgxAllowedTcbLevels[result.VerificationResult] != true {
 			return logical.ErrorResponse("invalid TCB state %v", result.VerificationResult), nil
 		}
@@ -324,7 +322,7 @@ func (b *backend) pathLogin(ctx context.Context, req *logical.Request, data *fra
 			return logical.ErrorResponse("challenge decode error"), nil
 		}
 
-		ourQuote, err := ratee.SgxGetQuote(challengeBytes)
+		ourQuote, err := SgxGetQuote(challengeBytes)
 		if err != nil {
 			return logical.ErrorResponse("vault quote error"), nil
 		}
@@ -333,7 +331,7 @@ func (b *backend) pathLogin(ctx context.Context, req *logical.Request, data *fra
 
 		respData["quote"] = quoteBase64
 
-		collateral, err := ratee.SgxGetCollateral(ourQuote)
+		collateral, err := SgxGetCollateral(ourQuote)
 		if err != nil {
 			return logical.ErrorResponse("vault collateral error"), nil
 		}
