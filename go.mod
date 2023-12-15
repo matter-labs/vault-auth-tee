@@ -3,7 +3,7 @@ module github.com/matter-labs/vault-auth-tee
 go 1.19
 
 require (
-	github.com/hashicorp/go-hclog v1.5.0
+	github.com/hashicorp/go-hclog v1.6.2
 	github.com/hashicorp/go-rootcerts v1.0.2
 	github.com/hashicorp/vault v1.14.1
 	github.com/hashicorp/vault/api v1.9.2
