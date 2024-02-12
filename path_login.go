@@ -23,7 +23,9 @@ import (
 	"github.com/hashicorp/vault/sdk/logical"
 )
 
-var timeNowFunc = time.Now
+var timeNowFunc = func() (time.Time, error) {
+	return getRoughNtsUnixTime()
+}
 
 func pathLogin(b *backend) *framework.Path {
 	return &framework.Path{
@@ -262,8 +264,13 @@ func (b *backend) pathLogin(ctx context.Context, req *logical.Request, data *fra
 		return logical.ErrorResponse("collateral unmarshal error"), nil
 	}
 
+	now, err := timeNowFunc()
+	if err != nil {
+		return logical.ErrorResponse("time error"), nil
+	}
+
 	// Do the actual remote attestation verification
-	result, err := SgxVerifyRemoteReportCollateral(quoteBytes, collateral, timeNowFunc().Unix())
+	result, err := SgxVerifyRemoteReportCollateral(quoteBytes, collateral, now.Unix())
 	if err != nil {
 		return logical.ErrorResponse("sgx verify error"), nil
 	}
@@ -302,8 +309,6 @@ func (b *backend) pathLogin(ctx context.Context, req *logical.Request, data *fra
 	}
 
 	entry.PopulateTokenAuth(auth)
-
-	now := timeNowFunc()
 
 	if !now.Add(auth.TTL).After(expirationDate) {
 		auth.TTL = expirationDate.Sub(now)
@@ -388,7 +393,10 @@ func (b *backend) pathLoginRenew(ctx context.Context, req *logical.Request, d *f
 		return logical.ErrorResponse("error parsing `collateral_expiration_date` metadata"), nil
 	}
 
-	now := timeNowFunc()
+	now, err := timeNowFunc()
+	if err != nil {
+		return logical.ErrorResponse("time error"), nil
+	}
 
 	if expirationDate.Before(now) {
 		return logical.ErrorResponse("Collateral expired"), nil
