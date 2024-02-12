@@ -3,30 +3,37 @@
 
   inputs = {
     # for libsgx-dcap-quote-verify
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.05";
-    mynixpkgs.url =
-      "github:haraldh/nixpkgs/intel-dcap-openssl";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
+
+    nixsgx-flake = {
+      url = "github:matter-labs/nixsgx";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     gitignore = {
       url = "github:hercules-ci/gitignore.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = { self, nixpkgs, gitignore, mynixpkgs, ... }:
+  outputs = { self, nixpkgs, gitignore, nixsgx-flake, ... }:
     let
       system = "x86_64-linux";
-      pkgs = import nixpkgs { inherit system; };
-      mypkgs = import mynixpkgs { inherit system; };
+      pkgs = import nixpkgs { inherit system; overlays = [ nixsgx-flake.overlays.default ]; };
       bin = pkgs.buildGoModule {
-        buildInputs = with mypkgs; [ sgx-sdk libsgx-dcap-quote-verify ];
+          buildInputs = with pkgs; [
+            nixsgx.sgx-sdk
+            nixsgx.sgx-dcap
+            nixsgx.sgx-dcap.quote_verify
+          ];
 
         CGO_CFLAGS =
-          "-I${mypkgs.libsgx-dcap-quote-verify.dev}/include -I${mypkgs.sgx-sdk}/include";
-        LDFLAGS = "-L${mypkgs.libsgx-dcap-quote-verify.dev}/lib";
+          "-I${pkgs.nixsgx.sgx-dcap}/include -I${pkgs.nixsgx.sgx-sdk}/include";
+        LDFLAGS = "-L${pkgs.nixsgx.sgx-dcap}/lib";
 
         name = "vault-auth-tee";
         src = gitignore.lib.gitignoreSource ./.;
-        vendorSha256 = "sha256-9l1EVnWIJ+FdIcEic14M/B2BLD/Ffj+dCkompa06KJQ=";
+        vendorHash = "sha256-lhc4Fs+jGVYnd3vUWWXpebuBsPz6vbr1bCGwdyIPeKU=";
       };
       dockerImage = pkgs.dockerTools.buildImage {
         name = "vault-auth-tee";
