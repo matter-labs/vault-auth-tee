@@ -9,6 +9,8 @@ require (
 	github.com/hashicorp/vault/api v1.11.0
 	github.com/hashicorp/vault/sdk v0.11.0
 	github.com/stretchr/testify v1.8.4
+	gitlab.com/hacklunch/ntp v0.2.1-0.20200714090752-d286380a85fb
+	gitlab.com/hacklunch/ntske v0.0.0-20201006122939-e09fea38c855
 	golang.org/x/crypto v0.18.0
 )
 
@@ -44,6 +46,7 @@ require (
 	github.com/Masterminds/sprig/v3 v3.2.3 // indirect
 	github.com/Microsoft/go-winio v0.6.1 // indirect
 	github.com/ProtonMail/go-crypto v0.0.0-20230828082145-3c4c8a2d2371 // indirect
+	github.com/aead/cmac v0.0.0-20160719120800-7af84192f0b1 // indirect
 	github.com/aliyun/alibaba-cloud-sdk-go v1.62.676 // indirect
 	github.com/armon/go-metrics v0.4.1 // indirect
 	github.com/armon/go-radix v1.0.0 // indirect
@@ -224,6 +227,7 @@ require (
 	github.com/renier/xmlrpc v0.0.0-20170708154548-ce4a1a486c03 // indirect
 	github.com/ryanuber/go-glob v1.0.0 // indirect
 	github.com/sasha-s/go-deadlock v0.2.0 // indirect
+	github.com/secure-io/siv-go v0.0.0-20180922214919-5ff40651e2c4 // indirect
 	github.com/segmentio/fasthash v1.0.3 // indirect
 	github.com/sethvargo/go-limiter v0.7.1 // indirect
 	github.com/shirou/gopsutil/v3 v3.22.6 // indirect
