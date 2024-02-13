@@ -11,7 +11,7 @@
 //
 // From https://github.com/cloudflare/cfssl/blob/master/ocsp/responder.go
 
-package tee
+package vault_auth_tee
 
 import (
 	"crypto"

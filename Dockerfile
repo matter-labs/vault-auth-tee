@@ -42,7 +42,7 @@ RUN --mount=type=cache,target=/root/.cache --mount=type=cache,target=/go --mount
     mkdir -p /go/src/github.com/matter-labs/vault-auth-tee; \
     cd /go/src/github.com/matter-labs/vault-auth-tee; \
     rsync -a --delete-after /data/ ./ ; \
-    CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -o vault-auth-tee; \
+    CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -o vault-auth-tee cmd/vault-auth-tee/main.go ; \
     mkdir -p /opt/vault/plugins; \
     cp vault-auth-tee /opt/vault/plugins/vault-auth-tee; \
     :

@@ -2,15 +2,13 @@
 // Copyright (c) HashiCorp, Inc.
 // Copyright (c) Matter Labs
 
-package tee
+package vault_auth_tee
 
 import (
 	"context"
 
 	"github.com/hashicorp/vault/sdk/framework"
 	"github.com/hashicorp/vault/sdk/logical"
-
-	"github.com/matter-labs/vault-auth-tee/version"
 )
 
 func pathInfo(b *backend) *framework.Path {
@@ -33,8 +31,8 @@ get help.
 func (b *backend) pathInfoRead(ctx context.Context, req *logical.Request, _ *framework.FieldData) (*logical.Response, error) {
 	return &logical.Response{
 		Data: map[string]interface{}{
-			"name":    version.Name,
-			"version": version.Version,
+			"name":    Name,
+			"version": Version,
 		},
 	}, nil
 }

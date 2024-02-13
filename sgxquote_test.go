@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MPL-2.0
 // Copyright (c) Matter Labs
 
-package ratee
+package vault_auth_tee
 
 import (
 	"encoding/base64"

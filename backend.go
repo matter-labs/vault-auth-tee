@@ -2,12 +2,10 @@
 // Copyright (c) HashiCorp, Inc.
 // Copyright (c) Matter Labs
 
-package tee
+package vault_auth_tee
 
 import (
 	"context"
-	"github.com/matter-labs/vault-auth-tee/version"
-
 	"github.com/hashicorp/vault/sdk/framework"
 	"github.com/hashicorp/vault/sdk/logical"
 )
@@ -39,7 +37,7 @@ func Backend() *backend {
 		},
 		AuthRenew:      b.loginPathWrapper(b.pathLoginRenew),
 		BackendType:    logical.TypeCredential,
-		RunningVersion: "v" + version.Version,
+		RunningVersion: "v" + Version,
 	}
 
 	return &b

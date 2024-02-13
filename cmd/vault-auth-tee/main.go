@@ -5,13 +5,12 @@
 package main
 
 import (
+	"github.com/matter-labs/vault-auth-tee"
 	"os"
 
 	hclog "github.com/hashicorp/go-hclog"
 	"github.com/hashicorp/vault/api"
 	"github.com/hashicorp/vault/sdk/plugin"
-
-	"github.com/matter-labs/vault-auth-tee/tee"
 )
 
 func main() {
@@ -23,7 +22,7 @@ func main() {
 	tlsProviderFunc := api.VaultPluginTLSProvider(tlsConfig)
 
 	if err := plugin.ServeMultiplex(&plugin.ServeOpts{
-		BackendFactoryFunc: tee.Factory,
+		BackendFactoryFunc: vault_auth_tee.Factory,
 		// set the TLSProviderFunc so that the plugin maintains backwards
 		// compatibility with Vault versions that don’t support plugin AutoMTLS
 		TLSProviderFunc: tlsProviderFunc,
