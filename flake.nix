@@ -4,71 +4,39 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
 
-    nix-filter.url = "github:numtide/nix-filter";
-
     nixsgx-flake = {
       url = "github:matter-labs/nixsgx";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    snowfall-lib = {
+      url = "github:snowfallorg/lib?rev=92803a029b5314d4436a8d9311d8707b71d9f0b6";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, nixsgx-flake, nix-filter, ... }:
-    let
-      system = "x86_64-linux";
-      filter = nix-filter.lib;
-      pkgs = import nixpkgs { inherit system; overlays = [ nixsgx-flake.overlays.default ]; };
-      bin = pkgs.buildGoModule {
-        buildInputs = with pkgs; [
-          nixsgx.sgx-sdk
-          nixsgx.sgx-dcap
-          nixsgx.sgx-dcap.quote_verify
-        ];
+  outputs = inputs:
+    inputs.snowfall-lib.mkFlake {
+      inherit inputs;
+      src = ./.;
 
-        name = "vault-auth-tee";
-        src = filter {
-          root = ./.;
-          include = [
-            ./go.mod
-            ./go.sum
-            "cmd"
-            "test-fixtures"
-            (filter.matchExt "go")
-          ];
+      package-namespace = "vat";
+
+      overlays = with inputs; [
+        nixsgx-flake.overlays.default
+      ];
+
+      alias = {
+        packages = {
+          default = "vault-auth-tee";
         };
-
-        vendorHash = "sha256-t59C0yzJzFAXNXYOFbta2g5CYlkfvlukq42cxCwLaGY=";
-      };
-
-      dockerImage = pkgs.dockerTools.buildLayeredImage {
-        name = "vault-auth-tee";
-        tag = "test";
-
-        config.Entrypoint = [ "/bin/sh" ];
-
-        contents = pkgs.buildEnv {
-          name = "image-root";
-
-          paths = with pkgs.dockerTools; [
-            bin
-            pkgs.vault
-            usrBinEnv
-            binSh
-            caCertificates
-            fakeNss
-          ];
-          pathsToLink = [ "/bin" "/etc" ];
+        shells = {
+          default = "vault-auth-tee";
         };
       };
-    in
-    with pkgs; {
-      formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixpkgs-fmt;
-      packages.x86_64-linux = {
-        inherit bin dockerImage;
-        default = bin;
-      };
-      devShells.x86_64-linux.default = mkShell {
-        inputsFrom = [ bin ];
-        nativeBuildInputs = with pkgs; [ dive go_1_21 ];
+
+      outputs-builder = channels: {
+        formatter = channels.nixpkgs.nixpkgs-fmt;
       };
     };
 }
