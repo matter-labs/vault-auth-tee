@@ -14,12 +14,13 @@ pkgs.dockerTools.buildLayeredImage {
 
     paths = with pkgs.dockerTools; [
       vat.vault-auth-tee
+      vat.vault-auth-tee.sha
       vault
       usrBinEnv
       binSh
       caCertificates
       fakeNss
     ];
-    pathsToLink = [ "/bin" "/etc" ];
+    pathsToLink = [ "/bin" "/etc" "/share" ];
   };
 }
