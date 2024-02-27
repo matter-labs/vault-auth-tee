@@ -249,19 +249,23 @@ func (b *backend) pathTeeWrite(ctx context.Context, req *logical.Request, d *fra
 }
 
 func handleSGXConfig(d *framework.FieldData, tee *TeeEntry) (*logical.Response, error) {
-	if sgxMrsignerRaw, ok := d.GetOk("sgx_mrsigner"); ok && sgxMrsignerRaw.(string) != "" {
+	if sgxMrsignerRaw, ok := d.GetOk("sgx_mrsigner"); ok {
 		tee.SgxMrsigner = strings.ToLower(sgxMrsignerRaw.(string))
-		b, err := hex.DecodeString(tee.SgxMrsigner)
-		if err != nil || len(b) != 32 {
-			return logical.ErrorResponse("`sgx_mrsigner` must be 32 byte hex encoded"), nil
+		if tee.SgxMrsigner != "" {
+			b, err := hex.DecodeString(tee.SgxMrsigner)
+			if err != nil || len(b) != 32 {
+				return logical.ErrorResponse("`sgx_mrsigner` must be 32 byte hex encoded"), nil
+			}
 		}
 	}
 
-	if sgxMrenclaveRaw, ok := d.GetOk("sgx_mrenclave"); ok && sgxMrenclaveRaw.(string) != "" {
+	if sgxMrenclaveRaw, ok := d.GetOk("sgx_mrenclave"); ok {
 		tee.SgxMrenclave = strings.ToLower(sgxMrenclaveRaw.(string))
-		b, err := hex.DecodeString(tee.SgxMrenclave)
-		if err != nil || len(b) != 32 {
-			return logical.ErrorResponse("`sgx_mrenclave` must be 32 byte hex encoded"), nil
+		if tee.SgxMrenclave != "" {
+			b, err := hex.DecodeString(tee.SgxMrenclave)
+			if err != nil || len(b) != 32 {
+				return logical.ErrorResponse("`sgx_mrenclave` must be 32 byte hex encoded"), nil
+			}
 		}
 	}
 
