@@ -9,12 +9,13 @@ package vault_auth_tee
 
 import (
 	"crypto/tls"
-	"fmt"
-	"gitlab.com/hacklunch/ntp"
-	"gitlab.com/hacklunch/ntske"
+	"errors"
 	"log"
 	"math/rand"
 	"time"
+
+	"gitlab.com/hacklunch/ntp"
+	"gitlab.com/hacklunch/ntske"
 )
 
 // Gets the rough network time using NTS-KE.
@@ -105,11 +106,11 @@ func getRoughNtsUnixTime() (time.Time, error) {
 	}
 
 	if queried < numToQuery {
-		return retTime, fmt.Errorf("failed to query enough servers")
+		return retTime, errors.New("failed to query enough servers")
 	}
 
 	if sumOffset > time.Minute {
-		return retTime, fmt.Errorf("queried time fluctuates too much")
+		return retTime, errors.New("queried time fluctuates too much")
 	}
 
 	return retTime, nil

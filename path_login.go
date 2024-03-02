@@ -13,6 +13,7 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"strings"
 	"time"
@@ -73,7 +74,7 @@ func (b *backend) loginPathWrapper(wrappedOp func(ctx context.Context, req *logi
 func (b *backend) pathLoginResolveRole(ctx context.Context, req *logical.Request, data *framework.FieldData) (*logical.Response, error) {
 	quoteBase64 := data.Get("quote").(string)
 	if quoteBase64 == "" {
-		return nil, fmt.Errorf("missing quote")
+		return nil, errors.New("missing quote")
 	}
 
 	quoteBytes, err := base64.StdEncoding.DecodeString(quoteBase64)
@@ -127,7 +128,7 @@ func (b *backend) pathLoginResolveRole(ctx context.Context, req *logical.Request
 func (b *backend) pathLoginAliasLookahead(ctx context.Context, req *logical.Request, d *framework.FieldData) (*logical.Response, error) {
 	name := d.Get("name").(string)
 	if name == "" {
-		return nil, fmt.Errorf("missing name")
+		return nil, errors.New("missing name")
 	}
 
 	return &logical.Response{
@@ -161,7 +162,7 @@ func Contains[T comparable](s []T, e T) bool {
 func (b *backend) pathLogin(ctx context.Context, req *logical.Request, data *framework.FieldData) (*logical.Response, error) {
 	name := data.Get("name").(string)
 	if name == "" {
-		return nil, fmt.Errorf("missing name")
+		return nil, errors.New("missing name")
 	}
 
 	// Allow constraining the login request to a single TeeEntry
@@ -371,7 +372,7 @@ func (b *backend) pathLoginRenew(ctx context.Context, req *logical.Request, d *f
 	// Certificate should not only match a registered tee policy.
 	// Also, the identity of the certificate presented should match the identity of the certificate used during login
 	if req.Auth.InternalData["subject_key_id"] != skid && req.Auth.InternalData["authority_key_id"] != akid && req.Auth.InternalData["hash_public_key"] != pkid {
-		return nil, fmt.Errorf("client identity during renewal not matching client identity used during login")
+		return nil, errors.New("client identity during renewal not matching client identity used during login")
 	}
 
 	// Get the tee and use its TTL
@@ -385,7 +386,7 @@ func (b *backend) pathLoginRenew(ctx context.Context, req *logical.Request, d *f
 	}
 
 	if !policyutil.EquivalentPolicies(tee.TokenPolicies, req.Auth.TokenPolicies) {
-		return nil, fmt.Errorf("policies have changed, not renewing")
+		return nil, errors.New("policies have changed, not renewing")
 	}
 
 	expirationDate, err := time.Parse(time.RFC3339, req.Auth.Metadata["collateral_expiration_date"])
