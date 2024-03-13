@@ -7,6 +7,7 @@ package vault_auth_tee
 import (
 	"context"
 	"crypto/tls"
+	"errors"
 	"fmt"
 	"io"
 	"testing"
@@ -189,7 +190,7 @@ func testAccStepTEE(_ *testing.T, name string, types string, mrSigner string, mr
 		Data:      data,
 		Check: func(resp *logical.Response) error {
 			if resp == nil && expectError {
-				return fmt.Errorf("expected error but received nil")
+				return errors.New("expected error but received nil")
 			}
 			return nil
 		},
