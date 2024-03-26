@@ -1,7 +1,9 @@
 # vault-auth-tee
 TEE remote attestation plugin for Hashicorp Vault
 
-# ⚠️☢️☣️ WARNING: not yet for production use ☣️☢️⚠️
+## Disclaimer
+
+This plugin has not yet received an audit. Use at your own risk.
 
 ## License
 
