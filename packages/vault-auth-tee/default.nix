@@ -24,7 +24,7 @@ pkgs.buildGoModule {
     ];
   };
 
-  postInstall = ''
+  postFixup = ''
     mkdir -p $sha/share
     sha256sum $out/bin/vault-auth-tee | (read a _; echo $a) > $sha/share/vault-auth-tee.sha256
   '';
