@@ -7,7 +7,7 @@ require (
 	github.com/hashicorp/go-rootcerts v1.0.2
 	github.com/hashicorp/vault v1.2.1-0.20240208012854-90c1515f84d3
 	github.com/hashicorp/vault/api v1.12.0
-	github.com/hashicorp/vault/sdk v0.11.0
+	github.com/hashicorp/vault/sdk v0.11.1
 	github.com/stretchr/testify v1.8.4
 	gitlab.com/hacklunch/ntp v0.2.1-0.20200714090752-d286380a85fb
 	gitlab.com/hacklunch/ntske v0.0.0-20201006122939-e09fea38c855
