@@ -46,7 +46,7 @@ jobs:
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
           extraPullNames: nixsgx
       - name: nix build
-        run: nix run nixpkgs#nixci
+        run: nix run github:nixos/nixpkgs/nixos-23.11#nixci
       - name: nix docker image
         run: |
           nix build .#container-vault-auth-tee
