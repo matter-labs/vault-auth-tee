@@ -8,7 +8,7 @@ require (
 	github.com/hashicorp/vault v1.2.1-0.20240208012854-90c1515f84d3
 	github.com/hashicorp/vault/api v1.12.0
 	github.com/hashicorp/vault/sdk v0.11.0
-	github.com/stretchr/testify v1.8.4
+	github.com/stretchr/testify v1.9.0
 	gitlab.com/hacklunch/ntp v0.2.1-0.20200714090752-d286380a85fb
 	gitlab.com/hacklunch/ntske v0.0.0-20201006122939-e09fea38c855
 	golang.org/x/crypto v0.19.0
@@ -237,7 +237,7 @@ require (
 	github.com/sony/gobreaker v0.5.0 // indirect
 	github.com/spf13/cast v1.5.1 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	github.com/stretchr/objx v0.5.0 // indirect
+	github.com/stretchr/objx v0.5.2 // indirect
 	github.com/tencentcloud/tencentcloud-sdk-go v1.0.162 // indirect
 	github.com/tklauser/go-sysconf v0.3.10 // indirect
 	github.com/tklauser/numcpus v0.4.0 // indirect
