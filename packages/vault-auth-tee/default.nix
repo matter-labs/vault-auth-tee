@@ -29,5 +29,5 @@ pkgs.buildGoModule {
     sha256sum $out/bin/vault-auth-tee | (read a _; echo $a) > $sha/share/vault-auth-tee.sha256
   '';
 
-  vendorHash = "sha256-RmOyKVU+WOFUaC9nLsr0l+BnGpt0nEes3Su4IY0mOk0=";
+  vendorHash = "sha256-3jjtMSs1u4o+6hu+gk8zuzKNhqjHQtZ4DEfYlW3AJrA=";
 }
