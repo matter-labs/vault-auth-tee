@@ -4,31 +4,38 @@
   inputs = {
     nixsgx-flake.url = "github:matter-labs/nixsgx";
     nixpkgs.follows = "nixsgx-flake/nixpkgs";
-    snowfall-lib.follows = "nixsgx-flake/snowfall-lib";
+    flake-utils.url = "github:numtide/flake-utils?tag=v1.0.0";
   };
 
-  outputs = inputs:
-    inputs.snowfall-lib.mkFlake {
-      inherit inputs;
-      src = ./.;
+  outputs = { self, nixpkgs, flake-utils, nixsgx-flake }:
+    flake-utils.lib.eachSystem [ "x86_64-linux" ] (system:
+      let
+        pkgs = import nixpkgs {
+          inherit system; overlays = [
+          nixsgx-flake.overlays.default
+          overlays
+        ];
+          config.allowUnfree = true;
+        };
+        vault-auth-tee = pkgs.callPackage ./packages/vault-auth-tee.nix { };
+        container-vault-auth-tee = pkgs.callPackage ./packages/container-vault-auth-tee.nix { };
+        overlays = final: prev: { vat = { inherit vault-auth-tee; }; };
+      in
+      {
+        formatter = pkgs.nixpkgs-fmt;
 
-      package-namespace = "vat";
+        inherit overlays;
 
-      overlays = with inputs; [
-        nixsgx-flake.overlays.default
-      ];
-
-      alias = {
         packages = {
-          default = "vault-auth-tee";
+          inherit vault-auth-tee;
+          inherit container-vault-auth-tee;
+          default = vault-auth-tee;
         };
-        shells = {
-          default = "vault-auth-tee";
-        };
-      };
 
-      outputs-builder = channels: {
-        formatter = channels.nixpkgs.nixpkgs-fmt;
-      };
-    };
+        devShells = {
+          default = pkgs.mkShell {
+            inputsFrom = [ vault-auth-tee ];
+          };
+        };
+      });
 }

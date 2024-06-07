@@ -14,13 +14,13 @@ pkgs.buildGoModule {
 
   name = "vault-auth-tee";
   src = with lib.fileset; toSource {
-    root = ./../..;
+    root = ./..;
     fileset = unions [
-      ../../go.mod
-      ../../go.sum
-      ../../cmd
-      ../../test-fixtures
-      (fileFilter (file: file.hasExt "go") ./../..)
+      ../go.mod
+      ../go.sum
+      ../cmd
+      ../test-fixtures
+      (fileFilter (file: file.hasExt "go") ./..)
     ];
   };
 
