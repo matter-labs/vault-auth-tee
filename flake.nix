@@ -8,34 +8,36 @@
   };
 
   outputs = { self, nixpkgs, flake-utils, nixsgx-flake }:
-    flake-utils.lib.eachSystem [ "x86_64-linux" ] (system:
-      let
-        pkgs = import nixpkgs {
-          inherit system; overlays = [
-          nixsgx-flake.overlays.default
-          overlays
-        ];
-          config.allowUnfree = true;
-        };
-        vault-auth-tee = pkgs.callPackage ./packages/vault-auth-tee.nix { };
-        container-vault-auth-tee = pkgs.callPackage ./packages/container-vault-auth-tee.nix { };
-        overlays = final: prev: { vat = { inherit vault-auth-tee; }; };
-      in
-      {
-        formatter = pkgs.nixpkgs-fmt;
-
-        inherit overlays;
-
-        packages = {
-          inherit vault-auth-tee;
-          inherit container-vault-auth-tee;
-          default = vault-auth-tee;
-        };
-
-        devShells = {
-          default = pkgs.mkShell {
-            inputsFrom = [ vault-auth-tee ];
+    flake-utils.lib.eachSystem [ "x86_64-linux" ]
+      (system:
+        let
+          pkgs = import nixpkgs {
+            inherit system;
+            overlays = [
+              nixsgx-flake.overlays.default
+              self.overlays.default
+            ];
+            config.allowUnfree = true;
           };
-        };
-      });
+          vault-auth-tee = pkgs.callPackage ./packages/vault-auth-tee.nix { };
+          container-vault-auth-tee = pkgs.callPackage ./packages/container-vault-auth-tee.nix { };
+        in
+        {
+          formatter = pkgs.nixpkgs-fmt;
+
+          packages = {
+            inherit vault-auth-tee;
+            inherit container-vault-auth-tee;
+            default = vault-auth-tee;
+          };
+
+          devShells = {
+            default = pkgs.mkShell {
+              inputsFrom = [ vault-auth-tee ];
+            };
+          };
+        }) // {
+      overlays.default = final: prev: { vat = { inherit (self.packages.${prev.system}) vault-auth-tee; }; };
+    };
+
 }
