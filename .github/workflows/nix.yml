@@ -58,7 +58,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build and Push Container
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           tags: matterlabsrobot/vault-auth-tee:latest
           push: ${{ github.event_name == 'push' ||  github.event_name == 'schedule' }}
