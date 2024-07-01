@@ -20,14 +20,12 @@
             config.allowUnfree = true;
           };
           vault-auth-tee = pkgs.callPackage ./packages/vault-auth-tee.nix { };
-          container-vault-auth-tee = pkgs.callPackage ./packages/container-vault-auth-tee.nix { };
         in
         {
           formatter = pkgs.nixpkgs-fmt;
 
           packages = {
             inherit vault-auth-tee;
-            inherit container-vault-auth-tee;
             default = vault-auth-tee;
           };
 
