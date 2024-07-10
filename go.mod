@@ -5,7 +5,7 @@ go 1.21
 require (
 	github.com/hashicorp/go-hclog v1.6.3
 	github.com/hashicorp/go-rootcerts v1.0.2
-	github.com/hashicorp/vault v1.2.1-0.20240208012854-90c1515f84d3
+	github.com/hashicorp/vault v1.17.2
 	github.com/hashicorp/vault/api v1.14.0
 	github.com/hashicorp/vault/sdk v0.13.0
 	github.com/stretchr/testify v1.9.0
