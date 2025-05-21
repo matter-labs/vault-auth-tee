@@ -27,8 +27,6 @@ jobs:
           endpoint: https://attic.teepot.org/
           cache: tee-pot
           token: ${{ secrets.ATTIC_TOKEN }}
-      - name: Enable magic Nix cache
-        uses: DeterminateSystems/magic-nix-cache-action@main
       - run: nix flake check -L --show-trace --keep-going
 
   fmt:
@@ -47,8 +45,6 @@ jobs:
           endpoint: https://attic.teepot.org/
           cache: tee-pot
           token: ${{ secrets.ATTIC_TOKEN }}
-      - name: Enable magic Nix cache
-        uses: DeterminateSystems/magic-nix-cache-action@main
       - run: nix fmt
 
   build:
@@ -67,7 +63,5 @@ jobs:
           endpoint: https://attic.teepot.org/
           cache: tee-pot
           token: ${{ secrets.ATTIC_TOKEN }}
-      - name: Enable magic Nix cache
-        uses: DeterminateSystems/magic-nix-cache-action@main
       - name: nix build
         run: nix run github:nixos/nixpkgs/nixos-23.11#nixci
