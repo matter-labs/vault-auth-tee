@@ -1,6 +1,8 @@
 module github.com/matter-labs/vault-auth-tee
 
-go 1.21
+go 1.23.0
+
+toolchain go1.24.6
 
 require (
 	github.com/hashicorp/go-hclog v1.6.3
@@ -11,7 +13,7 @@ require (
 	github.com/stretchr/testify v1.9.0
 	gitlab.com/hacklunch/ntp v0.2.1-0.20200714090752-d286380a85fb
 	gitlab.com/hacklunch/ntske v0.0.0-20201006122939-e09fea38c855
-	golang.org/x/crypto v0.24.0
+	golang.org/x/crypto v0.35.0
 )
 
 require (
@@ -260,10 +262,10 @@ require (
 	golang.org/x/mod v0.17.0 // indirect
 	golang.org/x/net v0.25.0 // indirect
 	golang.org/x/oauth2 v0.18.0 // indirect
-	golang.org/x/sync v0.7.0 // indirect
-	golang.org/x/sys v0.21.0 // indirect
-	golang.org/x/term v0.21.0 // indirect
-	golang.org/x/text v0.16.0 // indirect
+	golang.org/x/sync v0.11.0 // indirect
+	golang.org/x/sys v0.30.0 // indirect
+	golang.org/x/term v0.29.0 // indirect
+	golang.org/x/text v0.22.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
 	golang.org/x/tools v0.21.1-0.20240508182429-e35e4ccd0d2d // indirect
 	google.golang.org/api v0.161.0 // indirect
